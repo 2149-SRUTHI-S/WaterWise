@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>WaterWise - Daily Water Use Calculator</title>
+
+    <script>
+      function nextQuestion(currentId, nextId) {
+        document.getElementById(currentId).style.display = "none";
+        document.getElementById(nextId).style.display = "block";
+      }
+    
+      function previousQuestion(currentId, previousId) {
+        document.getElementById(currentId).style.display = "none";
+        document.getElementById(previousId).style.display = "block";
+      }
+    
+      function skipQuestion(currentId, nextId) {
+        nextQuestion(currentId, nextId);
+      }
+    
+      // Hide all questions except the first one on page load
+      document.addEventListener("DOMContentLoaded", function () {
+        let questions = document.querySelectorAll(".question");
+        questions.forEach((question, index) => {
+          question.style.display = index === 0 ? "block" : "none";
+        });
+      });
+    </script>
+
+    <style>
+      /* General Reset */
+      body {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Arial', sans-serif;
+        background: linear-gradient(to bottom, #4294E3, #8F12FD);
+        color: #fff;
+        text-align: center;
+      }
+
+      /* Container */
+      .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 83.5vh;
+        text-align: center;
+        padding: 20px;
+      } 
+
+      /* Heading */
+      h1 {
+        font-size: 2.5rem;
+        margin-bottom: 2px;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+      }
+
+      /* Form */
+      form {
+        background: rgba(255, 255, 255, 0.2);
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        backdrop-filter: blur(10px);
+        width: 100%;
+        max-width: 500px;
+      }
+
+      /* Input Fields and Select */
+      input[type='number'],
+      select {
+        display: block;
+        width: 90%;
+        padding: 12px;
+        margin: 10px 0;
+        border: 2px solid #fff;
+        border-radius: 5px;
+        background: transparent;
+        color: #fff;
+        outline: none;
+        text-align: center;
+        cursor: pointer;
+        transition: border-color 0.3s ease;
+      }
+
+      input[type='number']:focus,
+      select:focus {
+        border-color: #fff;
+      }
+
+      /* Buttons */
+      .btn-container {
+        display: flex;
+        justify-content: center; /* Center buttons */
+        gap: 30px; /* Horizontal spacing between buttons */
+        margin-bottom: 20px; /* Vertical spacing with the below "Calculate" button */
+      }
+
+      #btn {
+        font-size: 1.2rem;
+        font-family: 'Times New Roman', Times, serif;
+        font-weight: bold;
+      }
+
+      .btn-container button, #calculateButton {
+        background: #fff;
+        color: #8F12FD;
+        border: none;
+        justify-content: center;
+        padding: 10px 20px;
+        margin-top: 10px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 1rem;
+        transition: background 0.3s ease;
+      }
+
+      #calculateButton {
+        font-size: 1.5rem;
+        font-family: 'Times New Roman', Times, serif;
+        font-weight: bold;
+      }
+
+      input {
+        justify-content: center;
+        display: flex;
+        align-items: center;
+      }
+
+      .btn-container button:hover, #calculateButton:hover {
+        background: #4294E3;
+        color: #fff;
+      }
+
+      option {
+        color: black;
+      }
+
+      /* Question Labels */
+      .unique {
+        font-family: 'Times New Roman', Times, serif;
+        margin-bottom: 15px;
+        text-decoration: solid;
+        text-align: center;
+        color: #fff;
+        font-size: 1.7rem;
+        font-weight: bold;
+      }
+
+      /* Responsive Design */
+      @media (max-width: 600px) {
+        h1 {
+          font-size: 2rem;
+        }
+
+        form {
+          padding: 15px;
+        }
+
+        .btn-container button, #calculateButton {
+          font-size: 0.9rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <h1>WaterWise - Daily Water Use Calculator</h1>
+    <div class="container">
+      <form method="POST" id="quizForm">
+        
+        <div class="question" id="question1" style="display: block">
+          <label class="unique" for="people">How many people are in your household?</label>
+          <input  type="number" name="people" required /><br />
+          <div class="btn-container">
+            <button
+              type="button"
+              onclick="previousQuestion('question1', 'calculateButton')"
+              id="btn"
+            >
+              Prev
+            </button>
+            <button
+              type="button"
+              onclick="skipQuestion('question1', 'question2')"
+              id="btn"
+            >
+              Skip
+            </button>
+            <button
+              type="button"
+              onclick="nextQuestion('question1', 'question2')"
+              id="btn"
+            >
+              Next
+            </button>
+          </div>
+        </div>
+  
+        <div class="question" id="question2">
+          <label for="average_shower"  class="unique"
+            >How long is the average shower in your household?</label
+          >
+          <input type="number" name="average_shower" required /><br />
+          <div class="btn-container">
+            <button
+              type="button"
+              onclick="previousQuestion('question2', 'question1')"
+              id="btn"
+            >
+              Prev
+            </button>
+            <button
+              type="button"
+              onclick="skipQuestion('question2', 'question3')"
+              id="btn"
+            >
+              Skip
+            </button>
+            <button
+              type="button"
+              onclick="nextQuestion('question2', 'question3')"
+              id="btn"
+            >
+              Next
+            </button>
+          </div>
+        </div>
+  
+        <div class="question" id="question3">
+          <label  class="unique" for="low_flow_shower">Do you have low-flow shower heads?</label>
+          <select name="low_flow_shower">
+            <option value="Yes">Yes</option>
+            <option value="No">No</option>
+            <option value="Some">Some</option></select
+          ><br />
+          <div class="btn-container">
+            <button
+              type="button"
+              onclick="previousQuestion('question3', 'question2')"
+              id="btn"
+            >
+              Prev
+            </button>
+            <button
+              type="button"
+              onclick="skipQuestion('question3', 'question4')"
+              id="btn"
+            >
+              Skip
+            </button>
+            <button
+              type="button"
+              onclick="nextQuestion('question3', 'question4')"
+              id="btn"
+            >
+              Next
+            </button>
+          </div>
+        </div>
+  
+        <div class="question" id="question4">
+          <label  class="unique" for="bath_frequency"
+            >Do you take baths? If so, how often per day?</label
+          >
+          <input type="number" name="bath_frequency" required /><br />
+          <div class="btn-container">
+            <button
+              type="button"
+              onclick="previousQuestion('question4', 'question3')"
+              id="btn"
+            >
+              Prev
+            </button>
+            <button
+              type="button"
+              onclick="skipQuestion('question4', 'question5')"
+              id="btn"
+            >
+              Skip
+            </button>
+            <button
+              type="button"
+              onclick="nextQuestion('question4', 'question5')"
+              id="btn"
+            >
+              Next
+            </button>
+          </div>
+        </div>
+  
+        <div class="question" id="question5">
+          <label  class="unique" for="faucet_open"
+            >How long do you leave your bathroom faucets running each day?</label
+          >
+          <input type="number" name="faucet_open" required /><br />
+          <div class="btn-container">
+            <button
+              type="button"
+              onclick="previousQuestion('question5', 'question4')"
+              id="btn"
+            >
+              Prev
+            </button>
+            <button
+              type="button"
+              onclick="skipQuestion('question5', 'question6')"
+              id="btn"
+            >
+              Skip
+            </button>
+            <button
+              type="button"
+              onclick="nextQuestion('question5', 'question6')"
+              id="btn"
+            >
+              Next
+            </button>
+          </div>
+        </div>
+  
+        <div class="question" id="question6">
+          <label  class="unique" for="low_flow_bathroom_faucet"
+            >Do your bathroom sinks have low-flow faucets?</label
+          >
+          <select name="low_flow_bathroom_faucet">
+            <option value="Yes">Yes</option>
+            <option value="No">No</option>
+            <option value="Some">Some</option></select
+          ><br />
+          <div class="btn-container">
+            <button
+              type="button"
+              onclick="previousQuestion('question6', 'question5')"
+              id="btn"
+            >
+              Prev
+            </button>
+            <button
+              type="button"
+              onclick="skipQuestion('question6', 'question7')"
+              id="btn"
+            >
+              Skip
+            </button>
+            <button
+              type="button"
+              onclick="nextQuestion('question6', 'question7')"
+              id="btn"
+            >
+              Next
+            </button>
+          </div>
+        </div>
+  
+        <div class="question" id="question7">
+          <label   class="unique" for="mellow">Do you "let it mellow?"</label>
+          <select name="mellow">
+            <option value="Yes">Yes</option>
+            <option value="Sometimes">Sometimes</option>
+            <option value="No">No</option></select
+          ><br />
+          <div class="btn-container">
+            <button
+              type="button"
+              onclick="previousQuestion('question7', 'question6')"
+              id="btn"
+            >
+              Prev
+            </button>
+            <button
+              type="button"
+              onclick="skipQuestion('question7', 'question8')"
+              id="btn"
+            >
+              Skip
+            </button>
+            <button
+              type="button"
+              onclick="nextQuestion('question7', 'question8')"
+              id="btn"
+            >
+              Next
+            </button>
+          </div>
+        </div>
+  
+        <div class="question" id="question8">
+          <label  class="unique" for="low_flow_toilets">Do you have low-flow toilets?</label>
+          <select name="low_flow_toilets">
+            <option value="Yes">Yes</option>
+            <option value="Sometimes">Sometimes</option>
+            <option value="No">No</option></select
+          ><br />
+          <div class="btn-container">
+            <button
+              type="button"
+              onclick="previousQuestion('question8', 'question7')"
+              id="btn"
+            >
+              Prev
+            </button>
+            <button
+              type="button"
+              onclick="skipQuestion('question8', 'question9')"
+              id="btn"
+            >
+              Skip
+            </button>
+            <button
+              type="button"
+              onclick="nextQuestion('question8', 'question9')"
+              id="btn"
+            >
+              Next
+            </button>
+          </div>
+        </div>
+  
+        <div class="question" id="question9">
+          <label  class="unique" for="kitchen_faucet_running"
+            >How long do you leave the kitchen faucet running each day?</label
+          >
+          <input type="number" name="kitchen_faucet_running" required /><br />
+          <div class="btn-container">
+            <button
+              type="button"
+              onclick="previousQuestion('question9', 'question8')"
+              id="btn"
+            >
+              Prev
+            </button>
+            <button
+              type="button"
+              onclick="skipQuestion('question9', 'question10')"
+              id="btn"
+            >
+              Skip
+            </button>
+            <button
+              type="button"
+              onclick="nextQuestion('question9', 'question10')"
+              id="btn"
+            >
+              Next
+            </button>
+          </div>
+        </div>
+  
+        <div class="question" id="question10">
+          <label  class="unique" for="low_flow_kitchen_faucet"
+            >Does your kitchen sink have a low-flow faucet?</label
+          >
+          <select name="low_flow_kitchen_faucet">
+            <option value="Yes">Yes</option>
+            <option value="No">No</option></select
+          ><br />
+          <div class="btn-container">
+            <button
+              type="button"
+              onclick="previousQuestion('question10', 'question9')"
+              id="btn"
+            >
+              Prev
+            </button>
+            <button
+              type="button"
+              onclick="skipQuestion('question10', 'question11')"
+              id="btn"
+            >
+              Skip
+            </button>
+            <button
+              type="button"
+              onclick="nextQuestion('question10', 'question11')"
+              id="btn"
+            >
+              Next
+            </button>
+          </div>
+        </div>
+  
+        <div class="question" id="question11">
+          <label  class="unique" for="dish_wash_technique">How do you wash your dishes?</label>
+          <select name="dish_wash_technique">
+            <option value="Old School Dishwasher">Old School Dishwasher</option>
+            <option value="Water/Energy Efficient Dishwasher">
+              Water/Energy Efficient Dishwasher
+            </option>
+            <option value="With my own two hands">With my own two hands</option>
+            <option value="Trash them or eat out">
+              Trash them or eat out
+            </option></select
+          ><br />
+          <div class="btn-container">
+            <button
+              type="button"
+              onclick="previousQuestion('question11', 'question10')"
+              id="btn"
+            >
+              Prev
+            </button>
+            <button
+              type="button"
+              onclick="skipQuestion('question11', 'question12')"
+              id="btn"
+            >
+              Skip
+            </button>
+            <button
+              type="button"
+              onclick="nextQuestion('question11', 'question12')"
+              id="btn"
+            >
+              Next
+            </button>
+          </div>
+        </div>
+  
+        <div class="question" id="question12">
+          <label  class="unique" for="dish_wash_load">What is the load per day?</label>
+          <input type="number" name="dish_wash_load" required /><br />
+          <div class="btn-container">
+            <button
+              type="button"
+              onclick="previousQuestion('question12', 'question11')"
+              id="btn"
+            >
+              Prev
+            </button>
+            <button
+              type="button"
+              onclick="skipQuestion('question12', 'question13')"
+              id="btn"
+            >
+              Skip
+            </button>
+            <button
+              type="button"
+              onclick="nextQuestion('question12', 'question13')"
+              id="btn"
+            >
+              Next
+            </button>
+          </div>
+        </div>
+  
+        <div class="question" id="question13">
+          <label  class="unique" for="laundry_technique">How do you do laundry?</label>
+          <select name="laundry_technique">
+            <option value="Old School Washing Machine">
+              Old School Washing Machine
+            </option>
+            <option value="Water/Energy Efficient Washing Machine">
+              Water/Energy Efficient Washing Machine
+            </option>
+            <option value="Elbow Grease">Elbow Grease</option>
+            <option value="Laundromat or pay someone else">
+              Laundromat or pay someone else
+            </option></select
+          ><br />
+          <div class="btn-container">
+            <button
+              type="button"
+              onclick="previousQuestion('question13', 'question12')"
+              id="btn"
+            >
+              Prev
+            </button>
+            <button
+              type="button"
+              onclick="skipQuestion('question13', 'question14')"
+              id="btn"
+            >
+              Skip
+            </button>
+            <button
+              type="button"
+              onclick="nextQuestion('question13', 'question14')"
+              id="btn"
+            >
+              Next
+            </button>
+          </div>
+        </div>
+  
+        <div class="question" id="question14">
+          <label  class="unique" for="laundry_load">What is the load per day?</label>
+          <input type="number" name="laundry_load" required /><br />
+          <div class="btn-container">
+            <button
+              type="button"
+              onclick="previousQuestion('question14', 'question13')"
+              id="btn"
+            >
+              Prev
+            </button>
+            <button
+              type="button"
+              onclick="skipQuestion('question14', 'question15')"
+              id="btn"
+            >
+              Skip
+            </button>
+            <button
+              type="button"
+              onclick="nextQuestion('question14', 'question15')"
+              id="btn"
+            >
+              Next
+            </button>
+          </div>
+        </div>
+  
+        <div class="question" id="question15">
+          <label  class="unique" for="greywater_system"
+            >Do you have a greywater system installed in your home?</label
+          >
+          <select name="greywater_system">
+            <option value="Yes">Yes</option>
+            <option value="No">No</option></select
+          ><br />
+          <div class="btn-container">
+            <button
+              type="button"
+              onclick="previousQuestion('question15', 'question14')"
+              id="btn"
+            >
+              Prev
+            </button>
+            <button
+              type="button"
+              onclick="skipQuestion('question15', 'calculateButton')"
+              id="btn"
+            >
+              Skip
+            </button>
+            <button
+              type="button"
+              onclick="nextQuestion('question15', 'calculateButton')"
+              id="btn"
+            >
+              Next
+            </button>
+          </div>
+        </div>
+  
+        <input
+          type="submit"
+          value="Calculate Water Footprint"
+          id="calculateButton"
+          style="display: none"
+        />
+      </form>
+  
+      <script>
+        let currentQuestion = 1;
+  
+        function nextQuestion(current, next) {
+          const currentElement = document.getElementById(current);
+          const nextElement = document.getElementById(next);
+  
+          if (currentElement && nextElement) {
+            currentElement.style.display = "none";
+            nextElement.style.display = "block";
+            currentQuestion++;
+  
+            if (currentQuestion === 15) {
+              document.getElementById("calculateButton").style.display = "block";
+            }
+          }
+        }
+  
+        function previousQuestion(current, previous) {
+          const currentElement = document.getElementById(current);
+          const previousElement = document.getElementById(previous);
+  
+          if (currentElement && previousElement && currentQuestion > 1) {
+            currentElement.style.display = "none";
+            previousElement.style.display = "block";
+            currentQuestion--;
+  
+            if (currentQuestion !== 15) {
+              document.getElementById("calculateButton").style.display = "none";
+            }
+          }
+        }
+  
+        function skipQuestion(current, next) {
+          const currentElement = document.getElementById(current);
+          const nextElement = document.getElementById(next);
+  
+          if (currentElement && nextElement) {
+            currentElement.style.display = "none";
+            nextElement.style.display = "block";
+            currentQuestion++;
+  
+            if (currentQuestion === 15) {
+              document.getElementById("calculateButton").style.display = "block";
+            }
+          }
+        }
+      </script>
+
+      <br>
+  
+  {% if result %}
+  <h2>Daily Water Usage:</h2>
+  <h2>{{ result }}</h2>
+  {% endif %}
+
+    </div>
+  </body>
+</html>

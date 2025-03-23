@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WaterWise</title>
+    <style>
+        /* General Reset */
+        body {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(to bottom, #4294E3, #8F12FD);
+            color: #fff;
+        }
+
+        /* Container */
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 94.3vh;
+            text-align: center;
+            padding: 20px;
+        }
+
+        /* Heading */
+        .container h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Form */
+        form {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        /* Input Field */
+        form input[type="text"] {
+            display: block;
+            width: 90%;
+            padding: 12px;
+            margin: 15px 0;
+            border: 2px solid #fff;
+            border-radius: 5px;
+            background: transparent;
+            color: #fff;
+            outline: none;
+            text-align: center;
+            font-size: 1rem;
+        }
+
+        /* Change placeholder text color */
+        form input[type="text"]::placeholder {
+            color: rgb(255, 255, 255); /* Light white */
+            font-size: 1rem;
+            text-align: center;
+            opacity: 1; /* Ensure full visibility */
+        }
+
+
+        /* Button */
+        form button {
+            background: #fff;
+            color: #8F12FD;
+            border: none;
+            padding: 10px 20px;
+            margin-top: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.5rem;
+            transition: background 0.3s ease;
+        }
+
+        form button:hover {
+            background: #4294E3;
+            color: #fff;
+        }
+
+        /* Prediction Result */
+        #result {
+            margin-top: 20px;
+            font-size: 1.3rem;
+            font-weight: bold;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 600px) {
+            .container h1 {
+                font-size: 2rem;
+            }
+
+            form {
+                padding: 15px;
+            }
+
+            form button {
+                font-size: 1.2rem;
+            }
+        }
+
+        /* Styling for result output */
+#prediction-result {
+    margin-top: 50px;
+    text-align: center;
+    font-size: 1.5rem;
+}
+
+/* Loading message */
+.loading {
+    color: #ffeb3b;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+/* Error message */
+.error {
+    color: #ff4d4d;
+    font-size: 1.2rem;
+    font-weight: bold;
+    background: rgba(255, 0, 0, 0.1);
+    padding: 10px;
+    border-radius: 5px;
+}
+
+/* Result Card */
+.result-card {
+    background: rgba(255, 255, 255, 0.2);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(10px);
+    width: 100%;
+    max-width: 450px;
+    margin: 20px auto;
+}
+
+/* Headings in Result Card */
+.result-card h2 {
+    color: #fff;
+    font-size: 1.8rem;
+    margin-bottom: 10px;
+}
+
+/* General Text Styling */
+.result-card p {
+    font-size: 1.2rem;
+    margin: 5px 0;
+}
+
+/* Highlight Water Footprint */
+.water-footprint {
+    font-size: 1.5rem;
+    color: #ffeb3b;
+    font-weight: bold;
+}
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>WaterWise - Water Footprint Estimator for Text Input</h1>
+        <form id="predictForm">
+            <input type="text" id="productInput" placeholder="Enter product name..." required>
+            <button type="submit">Tokenize and Calculate</button>
+        </form>
+        <div id="prediction-result"></div>
+    </div>
+    
+    <script>
+        document.getElementById("predictForm").addEventListener("submit", async function(event) {
+            event.preventDefault(); // Prevent form from reloading the page
+    
+            let productInput = document.getElementById("productInput").value.trim();
+            let resultDiv = document.getElementById("prediction-result");
+            resultDiv.innerHTML = "Processing..."; // Show a loading message
+    
+            if (!productInput) {
+                resultDiv.innerHTML = "Please enter a product name.";
+                return;
+            }
+    
+            let requestData = { product_name: productInput };
+    
+            try {
+                let response = await fetch("/predict", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(requestData)
+                });
+    
+                let data = await response.json();
+    
+                if (response.ok) {
+                    resultDiv.innerHTML = `
+                        <strong>Original Input:</strong> ${data.original_input} <br>
+                        <strong>Tokenized Text:</strong> ${data.processed_text} <br>
+                        <strong>Token IDs:</strong> ${data.token_ids} <br>
+                        <strong>Attention Mask:</strong> ${data.attention_mask} <br>
+                        <strong>Predicted Product:</strong> ${data.predicted_product} <br>
+                        <strong>Water Footprint:</strong> ${data.water_footprint_liters} Litres
+                    `;
+                } else {
+                    resultDiv.innerHTML = `<strong>Error:</strong> ${data.error}`;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = "Error communicating with the server.";
+            }
+        });
+    </script>    
+
+</body>
+</html>
